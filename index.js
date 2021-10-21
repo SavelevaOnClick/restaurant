@@ -186,7 +186,7 @@ class Restourant {
 
   getSalaryDepartments(extremum) {
     if (extremum !== "min" && extremum !== "max") {
-      return null;
+      throw new Error("Not correct data");
     }
     return this.departments.reduce((acum, department) => {
       acum[department.id] = this.getSalaryDepartment(department, extremum);
