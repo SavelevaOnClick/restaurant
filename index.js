@@ -292,7 +292,7 @@ class Restourant {
 
   getSalaryPositions(extremum) {
     if (extremum !== "min" && extremum !== "max") {
-      return null;
+      throw new Error("Not correct data");
     }
 
     return this.positions.reduce((acumulator, position) => {
