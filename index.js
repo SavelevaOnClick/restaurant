@@ -161,15 +161,15 @@ class Restourant {
   get getDepartments() {
     return this.departments;
   }
-  addNewDepartment(data) {
+  addDepartment(data) {
     this.departments.push(data);
   }
-  addNewPosition(data) {
+  addPosition(data) {
     this.positions.push(data);
   }
-  getSumSalaryOfDepartments(value) {
+  getTotalSalaryDepartments(value) {
     return this.departments.reduce((acumulator, department) => {
-      acumulator[department.id] = this.getSumSalaryOfDepartment(
+      acumulator[department.id] = this.getTotalSalaryDepartment(
         department,
         value
       );
@@ -177,48 +177,34 @@ class Restourant {
     }, {});
   }
 
-  getMeanSumOfDepartments(value) {
+  getMeanSumDepartments(value) {
     return this.departments.reduce((acumulator, department) => {
-      acumulator[department.id] = this.getMeanSumOfDepartment(
-        department,
-        value
-      );
+      acumulator[department.id] = this.getMeanSumDepartment(department, value);
       return acumulator;
     }, {});
   }
 
-  getExtremumSalaryOfDepartments(extremum) {
+  getSalaryDepartments(extremum) {
     if (extremum !== "min" && extremum !== "max") {
       return null;
     }
     return this.departments.reduce((acum, department) => {
-      acum[department.id] = this.getExtremumSalaryOfDepartment(
-        department,
-        extremum
-      );
+      acum[department.id] = this.getSalaryDepartment(department, extremum);
       return acum;
     }, {});
   }
 
-  getExtremumSalaryOfPositionOfDepartments(extremum, position) {
+  getSalaryPositionDepartments(extremum, position) {
     return this.departments.reduce((acumulator, department) => {
       if (extremum === "max") {
         acumulator = this.getMax(
           acumulator,
-          this.getExtremumSalaryOfPositionOfDepartment(
-            department,
-            extremum,
-            position
-          )
+          this.getSalaryPositionDepartment(department, extremum, position)
         );
       } else {
         acumulator = this.getMin(
           acumulator,
-          this.getExtremumSalaryOfPositionOfDepartment(
-            department,
-            extremum,
-            position
-          )
+          this.getSalaryPositionDepartment(department, extremum, position)
         );
       }
       return acumulator;
@@ -241,7 +227,7 @@ class Restourant {
     }, 0);
   }
 
-  getExtremumSalaryOfDepartment(department, extremum) {
+  getSalaryDepartment(department, extremum) {
     return department.employees
       .reduce((acum, employee) => {
         acum.push(employee.salary);
@@ -258,7 +244,7 @@ class Restourant {
     return elementSecond - elementFirst;
   }
 
-  getSumSalaryOfDepartment(department, value) {
+  getTotalSalaryDepartment(department, value) {
     let sum = 0;
     if (value === undefined) {
       for (let employee of department.employees) {
@@ -291,33 +277,34 @@ class Restourant {
     }
   }
 
-  getMeanSumOfDepartment(department, value) {
+  getMeanSumDepartment(department, value) {
     if (value === undefined) {
       return department.employees.length
-        ? this.getSumSalaryOfDepartment(department, value) /
+        ? this.getTotalSalaryDepartment(department, value) /
             department.employees.length
         : null;
     }
     return this.getAmountEployeesDepartment(department, value)
-      ? this.getSumSalaryOfDepartment(department, value) /
+      ? this.getTotalSalaryDepartment(department, value) /
           this.getAmountEployeesDepartment(department, value)
       : null;
   }
 
-  getExtremumSalaryOfPositions(extremum) {
+  getSalaryPositions(extremum) {
     if (extremum !== "min" && extremum !== "max") {
       return null;
     }
 
     return this.positions.reduce((acumulator, position) => {
-      acumulator[
-        position.title
-      ] = this.getExtremumSalaryOfPositionOfDepartments(extremum, position.id);
+      acumulator[position.title] = this.getSalaryPositionDepartments(
+        extremum,
+        position.id
+      );
       return acumulator;
     }, {});
   }
 
-  getExtremumSalaryOfPositionOfDepartment(department, extremum, position) {
+  getSalaryPositionDepartment(department, extremum, position) {
     let extrem = 0;
     for (let employee of department.employees) {
       if (employee.position === position) {
