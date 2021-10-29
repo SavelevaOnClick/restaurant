@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: #c69294;
+}
+
+#root {
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  padding: 15px;
+}
+.wrapperMainContent {
+  flex-grow: 2;
+}
+.wrapperSideBar {
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+}
+.wrapperSideBar > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.wrapperSideBar > div > h3 {
+  flex-basis: 100%;
+  text-align: center;
+  color: #e4cacb;
+  text-transform: uppercase;
+}
+.button {
+  margin-right: 15px;
+}
+li {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.updateBlock {
+  flex-basis: 100%;
+  flex-grow: 2;
+}
+.output {
+  display: block;
+  background: #e4cacb;
+  min-height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  align-self: center;
+}
+button {
+  cursor: pointer;
+}
+select {
+  margin-right: 15px;
+  cursor: pointer;
+}
+input[type="text"] {
+  width: auto;
+  display: block;
+}
+input[type="number"] {
+  margin-right: 15px;
+}
+input {
+  margin-bottom: 15px;
+}
