@@ -15,10 +15,9 @@ body {
   padding: 15px;
 }
 .wrapperMainContent {
-  flex-grow: 2;
+  flex-basis: 60%;
 }
 .wrapperSideBar {
-  flex-grow: 0;
   display: flex;
   flex-direction: column;
 }

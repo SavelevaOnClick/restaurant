@@ -201,11 +201,9 @@ class Restourant {
     this.buttonDepartmentsSalarys.classList.add("button");
     this.buttonDepartmentsSalarys.onclick = this.outputSalarys.bind(this);
     this.selectEmploeesStatus = this.wrapperDepartmentsSalarys.appendChild(
-      document.createElement("select")
-    );
-    this.createSelect(
-      this.selectEmploeesStatus,
-      this.createEmploeersStatusList()
+      this.createSelect(
+        this.createStatusList("уволенных", "работающих", "всех")
+      )
     );
 
     // extremum salary department
@@ -226,9 +224,8 @@ class Restourant {
       this
     );
     this.selectSalaryExtremum = this.wrapperDepartmentsExtremumSalary.appendChild(
-      document.createElement("select")
+      this.createSelect(this.createExtremumList("минимум", "максимум"))
     );
-    this.createSelect(this.selectSalaryExtremum, this.createExtremumList());
 
     // salary extremum position
 
@@ -248,11 +245,7 @@ class Restourant {
       this
     );
     this.selectPositionsSalaryExtremum = this.wrapperPositionsSalary.appendChild(
-      document.createElement("select")
-    );
-    this.createSelect(
-      this.selectPositionsSalaryExtremum,
-      this.createExtremumList()
+      this.createSelect(this.createExtremumList("минимум", "максимум"))
     );
 
     // mean salary block
@@ -271,11 +264,9 @@ class Restourant {
     this.buttonMeanSalary.classList.add("button");
     this.buttonMeanSalary.onclick = this.outputMeanSalary.bind(this);
     this.selectMeanSalaryStatusEmployee = this.wrapperMeanSalary.appendChild(
-      document.createElement("select")
-    );
-    this.createSelect(
-      this.selectMeanSalaryStatusEmployee,
-      this.createEmploeersStatusList()
+      this.createSelect(
+        this.createStatusList("уволенных", "работающих", "всех")
+      )
     );
 
     // amount employees block
@@ -294,13 +285,10 @@ class Restourant {
     this.buttonAmountEmployees.classList.add("button");
     this.buttonAmountEmployees.onclick = this.outputAmountEmployees.bind(this);
     this.selectAmountEmployeesStatus = this.wrapperAmountEmployees.appendChild(
-      document.createElement("select")
+      this.createSelect(
+        this.createStatusList("уволенных", "работающих", "всех")
+      )
     );
-    this.createSelect(
-      this.selectAmountEmployeesStatus,
-      this.createEmploeersStatusList()
-    );
-
     // without position block
 
     this.wrapperWithoutPosition = this.wrapperSideBar.appendChild(
@@ -319,9 +307,8 @@ class Restourant {
       this
     );
     this.selectWithoutPosition = this.wrapperWithoutPosition.appendChild(
-      document.createElement("select")
+      this.createSelect(this.createPositionsList())
     );
-    this.createSelect(this.selectWithoutPosition, this.createPositionsList());
 
     // output block
     this.outputBlock = this.wrapperSideBar.appendChild(
@@ -359,6 +346,7 @@ class Restourant {
     this.listEmployees.classList.add("listEmployees");
     this.createList(this.listEmployees);
   }
+
   // assets
 
   cleanContainer(container) {
@@ -390,13 +378,15 @@ class Restourant {
     );
   }
 
-  createSelect(element, options) {
+  createSelect(options) {
+    const select = document.createElement("select");
     for (let option of Object.keys(options)) {
-      element.options[element.options.length] = new Option(
+      select.options[select.options.length] = new Option(
         options[option],
         option
       );
     }
+    return select;
   }
 
   createPositionsList() {
@@ -406,26 +396,25 @@ class Restourant {
     }, {});
   }
 
+  createStatusList(...status) {
+    return [0, 1, 2].reduce((acum, key, index) => {
+      acum[key] = arguments[index];
+      return acum;
+    }, {});
+  }
+
+  createExtremumList(...extremum) {
+    return ["min", "max"].reduce((acum, key, index) => {
+      acum[key] = arguments[index];
+      return acum;
+    }, {});
+  }
+
   createDepartmentsList() {
     return this.departments.reduce((acum, department) => {
       acum[department.id] = department.title;
       return acum;
     }, {});
-  }
-
-  createExtremumList() {
-    return {
-      max: "максимальная",
-      min: "минимальная",
-    };
-  }
-
-  createEmploeersStatusList() {
-    return {
-      1: "работающие",
-      0: "уволеные",
-      undefined: "все",
-    };
   }
 
   get getDepartments() {
@@ -456,7 +445,7 @@ class Restourant {
 
   getDepartmentSalary(department, statusEmployee) {
     let sum = 0;
-    if (statusEmployee === "undefined") {
+    if (statusEmployee === "2") {
       for (let employee of department.employees) {
         sum += employee.salary;
       }
@@ -619,7 +608,7 @@ class Restourant {
   }
 
   getAmountEployeesDepartment(department, statusEmployee) {
-    if (statusEmployee === "undefined") {
+    if (statusEmployee === "2") {
       return department.employees.reduce((acumulator, employee) => {
         acumulator++;
         return acumulator;
@@ -705,17 +694,15 @@ class Restourant {
     inputSalary.type = "number";
     inputSalary.value = dataValue.salary || 0;
     const selectPosition = formUpdate.appendChild(
-      document.createElement("select")
+      this.createSelect(this.createPositionsList())
     );
-    this.createSelect(selectPosition, this.createPositionsList());
     selectPosition.setAttribute("name", "position");
     let selectDepartment = formUpdate.appendChild(
-      document.createElement("select")
+      this.createSelect(this.createDepartmentsList())
     );
     selectPosition.options[dataValue.position - 1 || 0].selected = true;
     selectDepartment.setAttribute("name", "department");
 
-    this.createSelect(selectDepartment, this.createDepartmentsList());
     selectDepartment.options[dataValue.department - 1 || 0].selected = true;
   }
 
@@ -758,12 +745,10 @@ class Restourant {
 
   handleClick(event) {
     if (event.target.tagName.toLowerCase() === "button") {
-      let employeeInfo = event.target
+      let idDepartment = +event.target
         .closest("li")
-        .getAttribute("data-info")
-        .split(",");
-      let idDepartment = +employeeInfo[1];
-      let idEmployee = +employeeInfo[0];
+        .getAttribute("data-department");
+      let idEmployee = +event.target.closest("li").getAttribute("data-id");
       let indexDepartment = this.findDepartmentId(idDepartment);
       let indexEmployee = this.findEmployeeId(
         this.departments[indexDepartment],
@@ -830,7 +815,8 @@ class Restourant {
     this.departments.forEach((department, index) => {
       department.employees.forEach((employee, ind) => {
         let listItem = container.appendChild(document.createElement("li"));
-        listItem.setAttribute("data-info", [employee.id, department.id]);
+        listItem.setAttribute("data-id", employee.id);
+        listItem.setAttribute("data-department", department.id);
 
         let contentItem = listItem.appendChild(document.createElement("p"));
         contentItem.innerText = `${employee.firstName} ${employee.secondName}`;
@@ -877,4 +863,4 @@ class Restourant {
   }
 }
 let restourant = new Restourant(departments, positions);
-console.log(restourant.getDep);
+console.log(restourant.getDepartment);
