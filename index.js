@@ -369,13 +369,13 @@ class Restourant {
     return select[index].value;
   }
 
-  // sortMin(elementFirst, elementSecond) {
-  //   return elementFirst - elementSecond;
-  // }
-  //
-  // sortMax(elementFirst, elementSecond) {
-  //   return elementSecond - elementFirst;
-  // }
+  sortMin(elementFirst, elementSecond) {
+    return elementFirst - elementSecond;
+  }
+
+  sortMax(elementFirst, elementSecond) {
+    return elementSecond - elementFirst;
+  }
 
   findDepartmentId(idDepartment) {
     return this.departments.findIndex(
