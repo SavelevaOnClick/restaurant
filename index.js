@@ -176,6 +176,7 @@ class Restourant {
     this.root = document.getElementById("root");
     this.render();
   }
+
   render() {
     this.wrapperMainContent = this.root.appendChild(
       document.createElement("div")
